@@ -15,7 +15,15 @@ func Titulo(urls ...string) <-chan string {
 			html, _ := ioutil.ReadAll(resp.Body)
 
 			r, _ := regexp.Compile("<title>(.*?)<\\/title>")
-			c <- r.FindStringSubmatch(string(html))[1]
+
+			htmlFiltred := r.FindStringSubmatch(string(html))
+
+			if len(htmlFiltred) > 1 {
+				c <- htmlFiltred[1]
+			} else {
+				c <- "not found"
+			}
+
 		}(url)
 	}
 	return c
